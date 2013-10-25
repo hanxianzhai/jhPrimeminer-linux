@@ -491,7 +491,7 @@ int jhMiner_workerThread_getwork(int threadIndex){
             memcpy(&primecoinBlock.serverData, serverData, 32);
             // start mining
             BitcoinMiner(&primecoinBlock, psieve, threadIndex);
-            primecoinBlock.mpzPrimeChainMultiplier = 0; 
+            primecoinBlock.mpzPrimeChainMultiplier = 0;
         }
         if( psieve )
         {
@@ -1177,14 +1177,13 @@ int jhMiner_workerThread_getwork(int threadIndex){
             uptime %= (60 * 1000);
             unsigned int seconds = uptime / (1000);
             cout << endl << "==============================================================================" << endl;
-//            cout << endl << "--------------------------------------------------------------------------------"<< endl;
             cout << "Worker name (-u): " << commandlineInput.workername << " - Number of mining threads (-t): " << commandlineInput.numThreads << endl;
             cout << "Sieve: Size (-s): " << nMaxSieveSize << " - Percent(%) (-d): " << nSievePercentage << " - RoundPercent (-r): " << nRoundSievePercentage << endl;
-//            cout << "Prime Limit (-primes): " << commandlineInput.sievePrimeLimit << endl;
+            cout << "Prime Limit (-primes): " << commandlineInput.sievePrimeLimit << endl;
             cout << "Primorial (-m): [" << primeStats.nPrimorialMultiplier <<"] ["<< primeStats.nPrimorialMultiplier2 <<"] ["<< primeStats.nPrimorialMultiplier3 <<"] ["<< primeStats.nPrimorialMultiplier4 <<"] "<< endl;
-//            cout << "L1CacheElements (-c): " << primeStats.nL1CacheElements << endl;
-//            cout << "Chain Length Target (-target): " << nOverrideTargetValue << endl;
-//            cout << "BiTwin Length Target (-bttarget): " << nOverrideBTTargetValue << endl;
+            cout << "L1CacheElements (-c): " << primeStats.nL1CacheElements << endl;
+            cout << "Chain Length Target (-target): " << nOverrideTargetValue << endl;
+            cout << "BiTwin Length Target (-bttarget): " << nOverrideBTTargetValue << endl;
             cout << "Sieve Extensions (-se): " << nSieveExtensions << endl;
             cout << "Total Runtime: " << days << " Days, " << hours << " Hours, " << minutes << " minutes, " << seconds << " seconds" << endl;
             cout << "Total Share Value submitted to the Pool: " << primeStats.fTotalSubmittedShareValue << endl;
@@ -1429,46 +1428,6 @@ int jhMiner_workerThread_getwork(int threadIndex){
                     if (appQuitSignal)
                         return 0;
                     
-                    // calculate stats every ~30 seconds
-                    /*if( loopCounter % 10 == 0 )
-                    {
-                        double totalRunTime = (double)(getTimeMilliseconds() - primeStats.startTime);
-                        double statsPassedTime = (double)(getTimeMilliseconds() - primeStats.primeLastUpdate);
-                        if( statsPassedTime < 1.0 )
-                            statsPassedTime = 1.0; // avoid division by zero
-                        double primesPerSecond = (double)primeStats.primeChainsFound / (statsPassedTime / 1000.0);
-                        primeStats.primeLastUpdate = getTimeMilliseconds();
-                        primeStats.primeChainsFound = 0;
-                        float avgCandidatesPerRound = (double)primeStats.nCandidateCount / primeStats.nSieveRounds;
-                        float sievesPerSecond = (double)primeStats.nSieveRounds / (statsPassedTime / 1000.0);
-                        primeStats.primeLastUpdate = getTimeMilliseconds();
-                        primeStats.nCandidateCount = 0;
-                        primeStats.nSieveRounds = 0;
-                        primeStats.primeChainsFound = 0;
-                        uint32 bestDifficulty = primeStats.bestPrimeChainDifficulty;
-                        primeStats.bestPrimeChainDifficulty = 0;
-                        float primeDifficulty = GetChainDifficulty(bestDifficulty);
-                        if( workData.workEntry[0].dataIsValid )
-                        {
-                            statsPassedTime = (double)(getTimeMilliseconds() - primeStats.blockStartTime);
-                            if( statsPassedTime < 1.0 )
-                                statsPassedTime = 1.0; // avoid division by zero
-                            primeStats.bestPrimeChainDifficultySinceLaunch = std::max<double>((double)primeStats.bestPrimeChainDifficultySinceLaunch, primeDifficulty);
-                            //double sharesPerHour = ((double)valid_shares / totalRunTime) * 3600000.0;
-                            float shareValuePerHour = primeStats.fShareValue / totalRunTime * 3600000.0;
-                            //std::cout << std::endl << "==============================================================================" << std::endl;
-                            //std::cout << "Val/h: " << shareValuePerHour << " - Last Block/Total: " << primeStats.fBlockShareValue << " / " << primeStats.fShareValue;
-                            //std::cout << std::endl << "==============================================================================" << std::endl;
-                            //std::cout << "Val/h: " << shareValuePerHour << " - PPS: " << (sint32)primesPerSecond << " - SPS: " << sievesPerSecond << " - ACC: " << (sint32)avgCandidatesPerRound  <<  " - Primorial: " << primeStats.nPrimorialMultiplier << std::endl;
-                            //std::cout << " Chain/Hr:  ";
-                            //for(int i=6; i<=std::max(6,(int)primeStats.bestPrimeChainDifficultySinceLaunch); i++){
-                            //    std::cout << i << ": " <<  std::setprecision(2) << (((double)primeStats.chainCounter[0][i] / statsPassedTime) * 3600000.0) << " ";
-                            //}
-                            //std::cout << std::setprecision(8);
-                            //std::cout << std::endl;
-                        }
-                    }*/
-                    // wait and check some stats
                     uint64 time_updateWork = getTimeMilliseconds();
                     while( true )
                     {
@@ -1535,8 +1494,8 @@ int jhMiner_workerThread_getwork(int threadIndex){
                                 std::cout << "New Block: " << workData.xptClient->blockWorkInfo.height << " - Diff: " << blockDiff << " / " << poolDiff << std::endl;
                                 std::cout << "Valid/Total shares: [ " << valid_shares << " / " << total_shares << " ]  -  Max diff: " << primeStats.bestPrimeChainDifficultySinceLaunch << std::endl;
                                 statsPassedTime = (double)(getTimeMilliseconds() - primeStats.blockStartTime);
-
-                                std::cout << "  Stats:               [  Total  ]";
+                                
+                                std::cout << "  Stats: "<< std::setw(9) << std::right << "[  Total  ]";
                                 std::cout << " [Mult "<< std::setw(4) << std::right << primeStats.nPrimorialMultiplier << "]";
                                 std::cout << " [Mult "<< std::setw(4) << std::right << primeStats.nPrimorialMultiplier2 << "]";
                                 std::cout << " [Mult "<< std::setw(4) << std::right << primeStats.nPrimorialMultiplier3 << "]";
@@ -1546,19 +1505,18 @@ int jhMiner_workerThread_getwork(int threadIndex){
                                 for (int i = 6; i <= std::max(6,(int)primeStats.bestPrimeChainDifficultySinceLaunch); i++)
                                 {
                                     double sharePerHour = ((double)primeStats.chainCounter[0][i] / statsPassedTime) * 3600000.0;
-//                                    6ch/h:     0.00 - [        0] [       0] [       0] [       0] [       0]
-                                    std::cout << "  "<< i << "ch/h: "<< std::setw(9) << std::right << sharePerHour << " - ";
+                                    
+                                    std::cout << "  "<< i << "ch/h: "<< std::setw(9) << std::right << std::setprecision(4) << sharePerHour << " - ";
                                     std::cout << " ["<< std::setw(9) << std::right << primeStats.chainCounter[0][i]<< "]";
                                     std::cout << " ["<< std::setw(9) << std::right << primeStats.chainCounter[1][i]<< "]";
                                     std::cout << " ["<< std::setw(9) << std::right << primeStats.chainCounter[2][i]<< "]";
                                     std::cout << " ["<< std::setw(9) << std::right << primeStats.chainCounter[3][i]<< "]";
                                     std::cout << " ["<< std::setw(9) << std::right << "0" << "]" << std::endl;
-                                    //std::cout << i << "ch/h: " << sharePerHour << " - " << primeStats.chainCounter[0][i] << " [ " << primeStats.chainCounter[1][i] << " / " << primeStats.chainCounter[2][i] << " / " << primeStats.chainCounter[3][i] << " ]" << std::endl;
                                 }
-                                //std::cout << "Share Value submitted - Last Block/Total: " << primeStats.fBlockShareValue << " / " << primeStats.fTotalSubmittedShareValue << std::endl;
-                                //std::cout << "Current Primorial Value: " << primeStats.nPrimorialMultiplier << std::endl;
+                                
+                                // Recalculate Stats
                                 double totalRunTime = (double)(getTimeMilliseconds() - primeStats.startTime);
-//                                double statsPassedTime = (double)(getTimeMilliseconds() - primeStats.primeLastUpdate);
+
                                 if( statsPassedTime < 1.0 )
                                     statsPassedTime = 1.0; // avoid division by zero
                                 double primesPerSecond = (double)primeStats.primeChainsFound / (statsPassedTime / 1000.0);
@@ -1612,7 +1570,7 @@ int jhMiner_workerThread_getwork(int threadIndex){
                 commandlineInput.primorialMultiplier3 = 43;
                 commandlineInput.primorialMultiplier4 = 47;
                 
-//                commandlineInput.primorialMulti = new int[4];
+                //                commandlineInput.primorialMulti = new int[4];
                 commandlineInput.targetOverride = 9;
                 commandlineInput.targetBTOverride = 10;
                 commandlineInput.initialPrimorial = 37;
